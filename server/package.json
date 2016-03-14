@@ -1,0 +1,31 @@
+{
+  "name": "file-editor",
+  "version": "1.0.0",
+  "description": "a though experiment - image processing software",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "npm run-script cover",
+    "cover": "npm run-script analyze-coverage && npm run-script check-coverage",
+    "analyze-coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec tests --recursive",
+    "check-coverage": "istanbul check-coverage --statements 80"
+  },
+  "author": "Aidan Casey",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.15.0",
+    "express": "4.13.4",
+    "flatfile": "1.0.0",
+    "jade": "1.11.0",
+    "multer": "1.1.0",
+    "q": "1.4.1"
+  },
+  "devDependencies": {
+    "istanbul": "0.4.2",
+    "mocha": "2.4.5",
+    "nodemon": "1.9.0"
+  },
+  "engines": {
+    "node": ">= 4"
+  }
+}
