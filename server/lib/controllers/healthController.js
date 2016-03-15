@@ -1,4 +1,7 @@
-function healthController(){
+/*jslint node: true */
+"use strict";
+
+function healthController() {
 
     function get() {
         return new Promise(function(res, rej) {

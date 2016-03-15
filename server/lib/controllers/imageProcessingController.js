@@ -1,4 +1,5 @@
-'use strict';
+/*jslint node: true */
+"use strict";
 
 
 var repository = require('../image-store/image-repository')("../image-data-store.json");
