@@ -4,7 +4,6 @@ var fileUploadController = require('./controllers/fileUploadController')
 var healthController = require('./controllers/healthController')
 var imageProcessingController = require('./controllers/imageProcessingController')
 
-
 var path = require('path')
 
 module.exports = function() {
@@ -34,13 +33,12 @@ module.exports = function() {
     app.get('/jobs', function(req, res,next) {
 
 
-        return imageProcessingController().getJobs(function (err, data) {
+        return imageProcessingController().getJobs()
+            .then(function (data) {
             console.log('all done matey');
-           // console.log(data);
-            res.send(data).end();
-        })
+            res.status(200).json(data);
+        }).done();
     });
-
 
     //heathcheck
     app.get('/health', function(req, res,next){
@@ -54,37 +52,32 @@ module.exports = function() {
         }
     });
 
-
-
     //upload the file
-    app.post('/', fileUploadController.addFile(), function(req,res){
+    app.post('/', fileUploadController.addFile(), function(req,res) {
 
-        var imageMetadata = {"name" :req.file.filename,
-                             "path" :req.file.path,
-                             "mimetype" : req.file.mimetype
+        var imageMetadata = {"name": req.file.filename,
+            "path": req.file.path,
+            "mimetype": req.file.mimetype};
 
-        }
+        var job = {"image_name": req.file.filename,
+                    "job" : "convert_black_white"};
 
-        //then store the image path
-
-        return imageProcessingController().addImage(imageMetadata, function(err,data)
-        {
-            //then store the job to process the image
-
-            console.log('all done matey');
-
-            var job = {"foo":"hoo"};
-            imageProcessingController().addJob(job,function(err,data){
-
-                console.log('think ive saved job as well');
-                res.status(204).end();
+        return imageProcessingController().addImage(imageMetadata)
+            .then(function (data) {
+                  imageProcessingController().addJob(job)
             })
-
-         //   res.status(204).end();
-        })
-
-
+            .then(function(moreData){
+                console.log('now the job is created');
+                res.status(200).json({'all' : 'done'});
+            })
+            .fail(function (error) {
+                console.log(error);
+                res.send(error);
+            })
+            .done();
+            ;
     });
+
     app.use(function(err, req, res, next){
         console.log(err.stack);
         res.status(err.statusCode || 500).send(err);
@@ -95,53 +88,4 @@ module.exports = function() {
     })
 }
 
-
-
-
-
-
-/*app.get('/pilotusers/:serial_number', function(req, res, next){
- var sn = req.params.serial_number
- controller.get(sn)
- .then(function(ok){
- res.status(200).json(ok)
- })
- .catch(next)
- })
-
- app.post('/pilotusers/:serial_number', function(req, res, next){
- var sn = req.params.serial_number
- controller.add(sn)
- .then(function(ok){
- res.status(201).send(ok)
- })
- .catch(next)
- })
-
- app.get('/pilotusers', function(req, res, next){
- controller.getList()
- .then(function(ok){
- res.status(200).json(ok)
- })
- .catch(next)
- })
-
- app.post('/pilotusers', function(req, res, next){
- if(!req.is('application/json')) {
- return res.status(400).send('Invalid content type, expected application/json');
- }
- controller.create(req)
- .then(function(ok){
- res.status(201).send(ok)
- })
- .catch(next)
- })
-
- app.get('/loadData', function(req, res, next){
- controller.loadData()
- .then(function(ok){
- res.send(ok)
- })
- .catch(next)
- })*/
 

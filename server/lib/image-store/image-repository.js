@@ -43,14 +43,11 @@ module.exports = function(filePath) {
                         console.log('Error occurred instantiating flatfile database: ' + err);
                         reject(err);
                     }else {
-                        console.log('gotcha');
-                        console.log(localDB);
                         resolve(localDB.jobs);
                     }
                 }
             );
         })};
-
 
 
     var addImage = function(data) {
@@ -65,6 +62,7 @@ module.exports = function(filePath) {
                             if (err){
                                 reject(err)
                             }else{
+                                console.log('its ok baby');
                                 resolve('ok')
                             }
                         })
@@ -97,7 +95,8 @@ module.exports = function(filePath) {
         load: load,
         addImage: addImage,
         getJobs: getJobs,
-        getAllImages: getAllImages
+        getAllImages: getAllImages,
+        addJobToQueue : addJobToQueue
 
     };
 };
